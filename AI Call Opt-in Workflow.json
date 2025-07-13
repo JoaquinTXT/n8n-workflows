@@ -1,0 +1,3111 @@
+{
+  "name": "AI Call Opt-in Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "8b6104d6-7b4a-470b-a045-a7bb82b3835b",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2000,
+        780
+      ],
+      "id": "e6719d8b-9ceb-4c07-b925-709622ec9da5",
+      "name": "Webhook",
+      "webhookId": "8b6104d6-7b4a-470b-a045-a7bb82b3835b"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "10ff319f-7b29-46f9-a1cb-d21b768a19c3",
+              "name": "Authorization",
+              "value": "={{ THIS NEEDS TO BE PRIVATE INTEGRATION TOKEN }}",
+              "type": "string"
+            },
+            {
+              "id": "ce3377ae-e394-4739-a8dd-d099b02ee1d2",
+              "name": "locationId",
+              "value": "={{ THIS NEEDS TO BE LOCATION ID }}",
+              "type": "string"
+            },
+            {
+              "id": "65dd36bb-645c-4aac-8135-952b822b77cd",
+              "name": "Account Timezone",
+              "value": "={{ THIS NEEDS TO BE CONTINENT CITY TIMEZONE }}",
+              "type": "string"
+            },
+            {
+              "id": "96b9ae16-deb6-4029-88e4-22f8c4e2661c",
+              "name": "to_number",
+              "value": "={{ $('Webhook').item.json.body.call_inbound.to_number }}",
+              "type": "string"
+            },
+            {
+              "id": "1c8611cd-5f66-4f6e-b208-bfa2c1845280",
+              "name": "from_number",
+              "value": "={{ $('Webhook').item.json.body.call_inbound.from_number }}",
+              "type": "string"
+            },
+            {
+              "id": "6b778d42-cc76-41e5-bbce-2ff9a2f75579",
+              "name": "sales_pipeline_id",
+              "value": "={{ THIS NEEDS TO BE SALES PIPELINE ID }}",
+              "type": "string"
+            },
+            {
+              "id": "fba82037-940c-451a-a6e4-5cd796e540c4",
+              "name": "sales_pipeline_stage_id",
+              "value": "={{ THIS NEEDS TO BE SALES PIPELINE STAGE ID }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1400,
+        260
+      ],
+      "id": "20aed63c-78c4-4ecd-b9dc-284202ad6e8d",
+      "name": "Set Account Fields"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Webhook').item.json.body.event }}",
+                    "rightValue": "call_inbound",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "eefaf992-02e6-4518-a64b-a87ab6b9c0a0"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "call_inbound"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "03f3b1ff-57bf-4d81-bed4-f18e4d39d520",
+                    "leftValue": "={{ $('Webhook').item.json.body.customData[\"Event Name\"] }}",
+                    "rightValue": "outboundPhoneCall",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "outboundPhoneCall"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "843471d3-2025-441b-a977-9dfb94594ec1",
+                    "leftValue": "={{ $('Webhook').item.json.body.event }}",
+                    "rightValue": "=call_analyzed",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "call_analyzed"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c531f1dc-395d-4df0-bba3-ad84fe86b5d3",
+                    "leftValue": "={{ $('Webhook').item.json.body.name }}",
+                    "rightValue": "get_free_slots",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "get_free_slots"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2c1c688c-ca88-4b8f-9369-71d9c32be3fa",
+                    "leftValue": "={{ $('Webhook').item.json.body.name }}",
+                    "rightValue": "create_appointment",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "create_appointment"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1760,
+        740
+      ],
+      "id": "bf6a5fbf-3c58-434e-84f6-ec2ed97438ab",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b87cea0e-9df8-409b-9de8-acc134173dba",
+              "name": "Authorization",
+              "value": "={{ THIS NEEDS TO BE PRIVATE INTEGRATION TOKEN }}",
+              "type": "string"
+            },
+            {
+              "id": "f7217fd2-d8f5-4686-a52a-337fcef8570f",
+              "name": "Location ID",
+              "value": "={{ THIS NEEDS TO BE LOCATION ID }}",
+              "type": "string"
+            },
+            {
+              "id": "82f1c1f1-7eca-4ff4-b46a-fb3c362df2e0",
+              "name": "calendar_id",
+              "value": "={{ $('Webhook').item.json.body.args.calendar_id }}",
+              "type": "string"
+            },
+            {
+              "id": "1096078d-2867-4fc2-b868-96f52160e1a6",
+              "name": "timezone",
+              "value": "={{ $('Webhook').item.json.body.args.timezone }}",
+              "type": "string"
+            },
+            {
+              "id": "18108645-b3e4-40c3-bfd0-355a961ad7ff",
+              "name": "start_date",
+              "value": "={{ new Date(Date.parse($('Webhook').item.json.body.args.start_date)).getTime() - (1 * 60 * 60 * 1000) }}",
+              "type": "string"
+            },
+            {
+              "id": "df0a7938-e765-4336-a519-297e091023ca",
+              "name": "end_date",
+              "value": "={{ new Date(Date.parse($('Webhook').item.json.body.args.start_date)).getTime() + (72 * 60 * 60 * 1000) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1380,
+        1300
+      ],
+      "id": "c730750e-0cfd-4f8d-a444-57beaf7c589f",
+      "name": "Set get_free_slots Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b87cea0e-9df8-409b-9de8-acc134173dba",
+              "name": "Authorization",
+              "value": "={{ THIS NEEDS TO BE PRIVATE INTEGRATION TOKEN }}",
+              "type": "string"
+            },
+            {
+              "id": "f7217fd2-d8f5-4686-a52a-337fcef8570f",
+              "name": "Location ID",
+              "value": "={{ THIS NEEDS TO BE LOCATION ID }}",
+              "type": "string"
+            },
+            {
+              "id": "82f1c1f1-7eca-4ff4-b46a-fb3c362df2e0",
+              "name": "calendar_id",
+              "value": "={{ $('Webhook').item.json.body.args.calendar_id }}",
+              "type": "string"
+            },
+            {
+              "id": "18108645-b3e4-40c3-bfd0-355a961ad7ff",
+              "name": "start_time",
+              "value": "={{ $('Webhook').item.json.body.args.start_time }}",
+              "type": "string"
+            },
+            {
+              "id": "70954c3a-d4a4-42db-b26a-709a1a41e69e",
+              "name": "phone",
+              "value": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "2c92798c-eff1-4ed4-946e-705aafe01433",
+              "name": "contact_name",
+              "value": "={{ $('Webhook').item.json.body.args.contact_name }}",
+              "type": "string"
+            },
+            {
+              "id": "1b874344-a809-499c-a185-9c3aa04966df",
+              "name": "contact_email",
+              "value": "={{ $('Webhook').item.json.body.args.contact_email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1400,
+        1720
+      ],
+      "id": "4f468a2c-0efc-4737-afd3-5cc904634473",
+      "name": "Set create_appointment Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').first().json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"locationId\": \"{{ $('Set Account Fields').first().json.locationId }}\",\n  \"page\": 1,\n  \"pageLimit\": 20,\n  \"filters\": [\n    {\n      \"field\": \"phone\",\n      \"operator\": \"eq\",\n      \"value\": \"{{ $('Set Account Fields').first().json.from_number }}\"\n    }\n  ]\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "contact_details"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1100,
+        260
+      ],
+      "id": "d44f5dd8-df83-4d42-88f3-8429f947c30e",
+      "name": "Search Contacts GHL",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Get input data from nodes (all pre-formatted as strings)\nconst customValuesData = $('Get Custom Values GHL').item.json.custom_values || \"{}\";\nconst customFieldsData = $('Get Custom Fields GHL').item.json.custom_fields || \"{}\";\nconst contactData = $('Search Contacts GHL').item.json.contact_details || \"{}\";\nconst conversationsData = $('Search Conversations GHL').item.json || \"{}\";\nconst messagesOutput = $('Get Messages By Conversation ID GHL').item.json || \"{}\";\nconst notesOutput = $('Get Notes GHL').item.json || \"{}\";\nconst formattedNotes = $('Code Parse Notes').item.json?.readableNotes || \"\";\nconst formattedConversations = $('Code Parse Notes').item.json?.readableConversations || \"\";\nconst calendarData = $('Get Calendars GHL').item.json.calendars || \"{}\";\nconst accountFields = $('Set Account Fields').item.json;\n\n// Parse the JSON strings to objects\nconst customValuesObj = JSON.parse(customValuesData);\nconst customFieldsObj = JSON.parse(customFieldsData);\nconst contactObj = JSON.parse(contactData);\nconst calendarObj = JSON.parse(calendarData);\n\n// Extract the contact data from the first contact in the array\nconst contact = contactObj.contacts ? contactObj.contacts[0] : {};\n\n// Extract custom fields array from both sources\nconst accountCustomFields = customFieldsObj.customFields || [];\nconst contactCustomFields = contact.customFields || [];\nconst accountCustomValues = customValuesObj.customValues || [];\nconst calendars = calendarObj.calendars || [];\n\n// Create a mapping of field IDs to field names and keys\nconst fieldMap = {};\naccountCustomFields.forEach(field => {\n  // Convert field name to snake_case for variable names\n  const snakeCaseName = field.name\n    .toLowerCase()\n    .replace(/[^\\w\\s]/g, '')\n    .replace(/\\s+/g, '_');\n  \n  // If field.fieldKey starts with \"contact.\" remove that prefix\n  let fieldKey = field.fieldKey || \"\";\n  if (fieldKey.startsWith(\"contact.\")) {\n    fieldKey = fieldKey.substring(\"contact.\".length);\n  }\n  \n  fieldMap[field.id] = {\n    name: field.name,\n    fieldKey: fieldKey,\n    snakeCaseName: snakeCaseName\n  };\n  \n  // Also index by fieldKey for easy lookup if it exists\n  if (fieldKey) {\n    fieldMap[fieldKey] = {\n      name: field.name,\n      id: field.id,\n      snakeCaseName: snakeCaseName\n    };\n  }\n});\n\n// Create an object to store contact field values\nconst contactFieldValues = {};\n\n// Populate values from contact custom fields\ncontactCustomFields.forEach(field => {\n  if (fieldMap[field.id]) {\n    // Convert values to strings\n    contactFieldValues[fieldMap[field.id].snakeCaseName] = String(field.value || \"\");\n  }\n});\n\n// Safely get custom values with fallbacks for resilience\nconst getCustomValue = (name) => {\n  const value = accountCustomValues.find(cv => cv.name === name)?.value;\n  // Convert to string if it exists\n  return value !== undefined ? String(value) : '';\n};\n\n// Get essential values (using safe accessor functions)\nconst voiceAgentId = getCustomValue('Voice AI Agent ID Inbound');\nconst voiceAgentName = getCustomValue('Voice AI Agent Name Inbound');\nconst voiceAgentApiKey = getCustomValue('AI Call API Key'); // ADD THIS LINE\n\n// Get optional values (won't break if they don't exist)\nconst salesCalendar1 = getCustomValue('Sales Calendar 1');\nconst salesCalendar2 = getCustomValue('Sales Calendar 2');\nconst onboardingCalendar = getCustomValue('Onboarding Calendar');\nconst customerSuccessCalendar = getCustomValue('Customer Success Calendar');\nconst businessName = getCustomValue('Business Name');\n\n// Format contact name with proper capitalization\nconst firstName = contact.firstNameLowerCase ? \n  contact.firstNameLowerCase.charAt(0).toUpperCase() + contact.firstNameLowerCase.slice(1) : \n  '';\nconst lastName = contact.lastNameLowerCase ? \n  contact.lastNameLowerCase.charAt(0).toUpperCase() + contact.lastNameLowerCase.slice(1) : \n  '';\nconst fullName = `${firstName} ${lastName}`.trim() || 'none';\n\n// Create a complete mapping of all calendars (no hardcoded names)\nconst calendarMap = {};\ncalendars.forEach(calendar => {\n  // Store by both original name and snake_case name for flexibility\n  const calendarName = calendar.name || \"\";\n  const snakeCaseName = calendarName\n    .toLowerCase()\n    .replace(/[^\\w\\s]/g, '')\n    .replace(/\\s+/g, '_');\n  \n  calendarMap[calendarName] = calendar.id;\n  calendarMap[snakeCaseName] = calendar.id;\n});\n\n// Dynamically detect and categorize calendars based on naming patterns\nconst calendarTypes = {\n  sales: ['sales', 'discovery', 'consultation'],\n  onboarding: ['onboarding', 'welcome', 'orientation'],\n  customer_success: ['success', 'support', 'check-in', 'checkin', 'follow-up', 'followup'],\n  referral: ['referral', 'partner']\n};\n\n// Initialize the calendar types object\nconst detectedCalendarTypes = {};\n\n// Map each calendar to a type based on name patterns\nObject.entries(calendarMap).forEach(([calendarName, calendarId]) => {\n  // Skip snake_case duplicates\n  if (calendarName.includes('_')) return;\n  \n  const lowerName = calendarName.toLowerCase();\n  \n  // Try to categorize this calendar\n  for (const [type, keywords] of Object.entries(calendarTypes)) {\n    if (keywords.some(keyword => lowerName.includes(keyword))) {\n      // First match for this type becomes the primary calendar for that type\n      if (!detectedCalendarTypes[type]) {\n        detectedCalendarTypes[type] = String(calendarId);\n      }\n    }\n  }\n});\n\n// Get connection details from Set Account Fields\nconst toNumber = String(accountFields.to_number || '');\nconst fromNumber = String(accountFields.from_number || '');\nconst privateIntegrationToken = String(accountFields.Authorization || '');\nconst locationId = String(accountFields.locationId || '');\nconst accountTimezone = String(accountFields['Account Timezone'] || 'America/New_York');\n\n// Create the dynamic variables object with all the enhanced context\nconst dynamicVariables = {\n  // Basic contact info\n  name: String(firstName || 'none'),\n  phone: String(contact.phone || 'none'),\n  email: String(contact.email || 'none'),\n  address: String(contact.address || 'none'),\n  full_name: String(fullName),\n  business_name: String(contact.businessName || contact.companyName || 'none'),\n  contact_id: String(contact.id || ''),\n  location_id: locationId,\n  private_integration_token: privateIntegrationToken,\n  account_company_name: businessName,\n  from_number: fromNumber,\n  to_number: toNumber,\n  account_timezone: accountTimezone,\n  voice_ai_agent_name: voiceAgentName,\n  voice_ai_agent_id: voiceAgentId,\n  voice_ai_agent_api_key: voiceAgentApiKey, // CHANGE THIS FROM voiceAgentApi to voiceAgentApiKey\n  \n  // Calendar IDs (conditionally added)\n  sales_calendar_id: detectedCalendarTypes.sales || salesCalendar1 || '',\n  sales2_calendar_id: detectedCalendarTypes.referral || salesCalendar2 || '',\n  onboarding_calendar_id: detectedCalendarTypes.onboarding || onboardingCalendar || '',\n  customer_success_calendar_id: detectedCalendarTypes.customer_success || customerSuccessCalendar || '',\n  \n  // Add conversation and notes history\n  conversation_history: formattedConversations,\n  notes_history: formattedNotes,\n  \n  // Tags (if available)\n  tags: Array.isArray(contact.tags) ? contact.tags.map(tag => String(tag)).join(', ') : ''\n};\n\n// Add all custom field IDs and values to the dynamicVariables\naccountCustomFields.forEach(field => {\n  const snakeCaseName = fieldMap[field.id]?.snakeCaseName;\n  if (snakeCaseName) {\n    // Add field ID with snake_case format (with _id suffix)\n    dynamicVariables[`${snakeCaseName}_id`] = String(field.id);\n    \n    // Only add field values that actually exist for this contact\n    if (contactFieldValues[snakeCaseName] !== undefined) {\n      dynamicVariables[snakeCaseName] = contactFieldValues[snakeCaseName];\n    }\n  }\n});\n\n// Calendar map for easy access to all calendars\ndynamicVariables.calendar_map = JSON.stringify(calendarMap);\n\n// Create the call_inbound format structure (maintaining original format)\nconst callInbound = {\n  call_inbound: {\n    dynamic_variables: dynamicVariables\n  }\n};\n\n// Convert the object to a properly formatted JSON string\nconst jsonString = JSON.stringify(callInbound, null, 2);\n\n// Return an object with the jsonString as an easily mappable property\nreturn { jsonBody: jsonString };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1740,
+        280
+      ],
+      "id": "36ba2b2e-96bd-4788-8511-6e773df0ccf5",
+      "name": "Match Final Values",
+      "executeOnce": false,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $('Match Final Values').first().json.jsonBody }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        280
+      ],
+      "id": "9525e776-aa4a-40d2-ba3a-cabcf6ad55ae",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Improved notes parser that's more dynamic and robust\nfunction processData() {\n  try {\n    // Get the raw outputs from the nodes\n    const conversationsRaw = $('Get Messages By Conversation ID GHL').item.json.conversations_output;\n    const notesRaw = $('Get Notes GHL').item.json.notes_output;\n    \n    // Parse the JSON strings\n    const conversationsData = JSON.parse(conversationsRaw);\n    const notesData = JSON.parse(notesRaw);\n    \n    // Format the data for humans and AI consumption\n    const readableConversations = formatConversations(conversationsData);\n    const readableNotes = formatNotesImproved(notesData);\n    \n    // Return the result\n    return [{ \n      json: {\n        readableConversations: readableConversations,\n        readableNotes: readableNotes\n      } \n    }];\n  } catch (error) {\n    return [{ json: { error: error.message } }];\n  }\n}\n\n// Format conversations (keeping existing implementation)\nfunction formatConversations(data) {\n  let result = \"== CONVERSATION HISTORY ==\\n\\n\";\n  \n  if (!data.messages || !data.messages.messages || data.messages.messages.length === 0) {\n    return result + \"No conversations found.\";\n  }\n  \n  const messages = data.messages.messages;\n  \n  for (let i = 0; i < messages.length; i++) {\n    const msg = messages[i];\n    \n    // Add date\n    result += \"[\" + new Date(msg.dateAdded).toLocaleString() + \"] \";\n    \n    // Add direction\n    if (msg.direction === \"inbound\") {\n      result += \"INCOMING \";\n    } else {\n      result += \"OUTGOING \";\n    }\n    \n    // Add type\n    if (msg.messageType === \"TYPE_ACTIVITY_OPPORTUNITY\") {\n      result += \"Opportunity Activity\";\n    } else if (msg.messageType === \"TYPE_SMS\") {\n      result += \"SMS\";\n    } else if (msg.messageType === \"TYPE_CALL\") {\n      result += \"Call\";\n    } else {\n      result += msg.messageType;\n    }\n    \n    // Add status if available\n    if (msg.status) {\n      result += \" (\" + msg.status + \")\";\n    }\n    \n    result += \":\\n\";\n    \n    // Add body if available\n    if (msg.body) {\n      result += msg.body + \"\\n\";\n    }\n    \n    // Add separator\n    if (i < messages.length - 1) {\n      result += \"\\n--------------------------------------------------\\n\\n\";\n    }\n  }\n  \n  return result;\n}\n\n// Improved notes formatter that's more flexible\nfunction formatNotesImproved(data) {\n  let result = \"== CONTACT NOTES ==\\n\\n\";\n  \n  if (!data.notes || data.notes.length === 0) {\n    return result + \"No notes found.\";\n  }\n  \n  const notes = data.notes;\n  \n  for (let i = 0; i < notes.length; i++) {\n    const note = notes[i];\n    \n    result += \"NOTE CREATED: \" + new Date(note.dateAdded).toLocaleString() + \"\\n\\n\";\n    \n    // Extract data dynamically from the note body\n    try {\n      // Get the note body and try to parse key-value pairs\n      const noteBody = note.body;\n      \n      // Check if the note body looks like it contains JSON-like key-value pairs\n      if (noteBody.includes(\"\\\"key\\\"\") && noteBody.includes(\"\\\"field_value\\\"\")) {\n        // Parse the pseudo-JSON structure\n        const entries = extractKeyValuePairs(noteBody);\n        \n        // Group entries by category\n        const callDetails = {};\n        let transcript = \"\";\n        let summary = \"\";\n        \n        // Process each entry\n        entries.forEach(entry => {\n          const key = entry.key;\n          const value = entry.value;\n          \n          // Handle special cases\n          if (key === \"AI Call Transcript\") {\n            transcript = value;\n          } else if (key === \"AI Call Summary\") {\n            summary = value;\n          } else {\n            // Store other fields in the details object\n            callDetails[key] = value;\n          }\n        });\n        \n        // Output formatted data (Details first)\n        result += \"=== CALL DETAILS ===\\n\";\n        \n        // Organize details into categories for better readability\n        const categories = {\n          \"Basic Info\": [\"AI Call Type\", \"AI Call Contact Name\", \"AI Call Duration\"],\n          \"Outcome\": [\"AI Call Outcome\", \"AI Call Outcome Reason\"],\n          \"Appointment\": [\"AI Call Appointment DateTime\"],\n          \"Contact Info\": [\"AI Call Contact Email\", \"AI Call Contact Phone\"],\n          \"Technical\": [\"AI Call Recording\", \"AI Call Timestamp\", \"AI Call Ended Reason\"]\n        };\n        \n        // Display details by category\n        for (const [category, fields] of Object.entries(categories)) {\n          let categoryHasValues = false;\n          let categoryContent = \"\";\n          \n          fields.forEach(field => {\n            if (callDetails[field] && callDetails[field] !== \"none\" && callDetails[field] !== \"not_detected\") {\n              categoryContent += `• ${field.replace('AI Call ', '')}: ${callDetails[field]}\\n`;\n              categoryHasValues = true;\n            }\n          });\n          \n          if (categoryHasValues) {\n            result += `\\n${category}:\\n${categoryContent}`;\n          }\n        }\n        \n        // Add any remaining fields that weren't in specific categories\n        let otherFields = \"\";\n        for (const [key, value] of Object.entries(callDetails)) {\n          if (value && value !== \"none\" && value !== \"not_detected\") {\n            // Check if this field was already included in a category\n            let alreadyIncluded = false;\n            for (const fields of Object.values(categories)) {\n              if (fields.includes(key)) {\n                alreadyIncluded = true;\n                break;\n              }\n            }\n            \n            if (!alreadyIncluded) {\n              otherFields += `• ${key.replace('AI Call ', '')}: ${value}\\n`;\n            }\n          }\n        }\n        \n        if (otherFields) {\n          result += \"\\nOther Details:\\n\" + otherFields;\n        }\n        \n        // Add summary if present\n        if (summary) {\n          result += \"\\n=== CALL SUMMARY ===\\n\" + summary + \"\\n\";\n        }\n        \n        // Add transcript if present (full transcript, but with improved formatting)\n        if (transcript) {\n          result += \"\\n=== FULL TRANSCRIPT ===\\n\\n\";\n          \n          // Improve transcript readability by formatting agent/user exchanges\n          const formattedTranscript = formatTranscript(transcript);\n          result += formattedTranscript + \"\\n\";\n        }\n      } else {\n        // If not in the expected format, just include the raw note body\n        result += \"NOTE CONTENT:\\n\" + noteBody + \"\\n\";\n      }\n    } catch (error) {\n      // Fallback if parsing fails\n      result += \"NOTE CONTENT (raw):\\n\" + note.body + \"\\n\";\n    }\n    \n    // Add separator between notes\n    if (i < notes.length - 1) {\n      result += \"\\n\" + \"=\".repeat(50) + \"\\n\\n\";\n    }\n  }\n  \n  return result;\n}\n\n// Helper function to format transcript for better readability\nfunction formatTranscript(transcript) {\n  // Replace escaped newlines with actual newlines\n  let formatted = transcript.replace(/\\\\n/g, '\\n');\n  \n  // Split into lines\n  const lines = formatted.split('\\n');\n  let result = '';\n  \n  // Process each line\n  for (let i = 0; i < lines.length; i++) {\n    const line = lines[i].trim();\n    \n    if (line.startsWith('Agent:')) {\n      // Format agent lines\n      result += line + '\\n';\n    } else if (line.startsWith('User:')) {\n      // Add spacing before user responses and format\n      if (i > 0) result += '\\n';\n      result += line + '\\n';\n    } else {\n      // Add other lines as-is\n      result += line + '\\n';\n    }\n  }\n  \n  return result;\n}\n\n\n// Helper function to extract key-value pairs from the pseudo-JSON structure\nfunction extractKeyValuePairs(text) {\n  const entries = [];\n  const lines = text.split(\"\\n\");\n  \n  let currentKey = null;\n  let currentValue = null;\n  \n  for (let i = 0; i < lines.length; i++) {\n    const line = lines[i].trim();\n    \n    // Look for key lines\n    if (line.includes(\"\\\"key\\\"\") && line.includes(\":\")) {\n      // Extract the key name\n      const keyMatch = line.match(/\\\"key\\\":\\s*\\\"([^\\\"]+)\\\"/);\n      if (keyMatch && keyMatch[1]) {\n        currentKey = keyMatch[1];\n      }\n    }\n    \n    // Look for field_value lines\n    if (line.includes(\"\\\"field_value\\\"\") && line.includes(\":\")) {\n      // Extract the value\n      const valueMatch = line.match(/\\\"field_value\\\":\\s*\\\"(.*?)\\\"/);\n      if (valueMatch) {\n        // Handle escaped quotes within the value\n        currentValue = valueMatch[1].replace(/\\\\\"/g, '\"').replace(/\\\\\\\\n/g, '\\n');\n        \n        // If we have both key and value, add them to our entries\n        if (currentKey) {\n          entries.push({\n            key: currentKey,\n            value: currentValue\n          });\n          \n          // Reset for next pair\n          currentKey = null;\n          currentValue = null;\n        }\n      }\n    }\n  }\n  \n  return entries;\n}\n\n// Run the function and return the result\nreturn processData();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        740,
+        280
+      ],
+      "id": "e47fa48b-4011-496f-a160-9c49532a1dda",
+      "name": "Code Parse Notes",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/contacts/{{ $('Search Contacts GHL2').item.json.contacts[0].id }}/notes",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "notes_output"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        280
+      ],
+      "id": "9aa85a11-ef7c-4a89-8fc4-ef860a803ecf",
+      "name": "Get Notes GHL",
+      "retryOnFail": false,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/conversations/{{ $('Search Conversations GHL').item.json.conversations[0].id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "conversations_output"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        280
+      ],
+      "id": "991d88d1-1470-4a3a-aa51-2a1a7abe5802",
+      "name": "Get Messages By Conversation ID GHL",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://services.leadconnectorhq.com/conversations/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "contactId",
+              "value": "={{ $json.contacts[0].id }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -20,
+        280
+      ],
+      "id": "749796fd-9d36-4d81-8e23-cd4962d1af2d",
+      "name": "Search Conversations GHL",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://services.leadconnectorhq.com/calendars/",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "locationId",
+              "value": "={{ $('Set Account Fields').item.json.locationId }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "calendars"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        980,
+        280
+      ],
+      "id": "788d0316-d54c-4bac-a164-3f0007a8d2f8",
+      "name": "Get Calendars GHL",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/locations/{{ $('Set Account Fields').item.json.locationId }}/customFields",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "custom_fields"
+            }
+          }
+        }
+      },
+      "id": "430606fe-09c1-4653-94ce-db3f50e921e8",
+      "name": "Get Custom Fields GHL",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1240,
+        280
+      ],
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/locations/{{ $('Set Account Fields').item.json.locationId }}/customValues",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "custom_values"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1500,
+        280
+      ],
+      "id": "267e1bc8-e7bb-4f8a-8226-147bc2a15906",
+      "name": "Get Custom Values GHL",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').first().json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"locationId\": \"{{ $('Set Account Fields').first().json.locationId }}\",\n  \"page\": 1,\n  \"pageLimit\": 20,\n  \"filters\": [\n    {\n      \"field\": \"phone\",\n      \"operator\": \"eq\",\n      \"value\": \"{{ $('Set Account Fields').first().json.from_number }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -780,
+        260
+      ],
+      "id": "822c8a95-cc7c-4b85-b013-5042208c29d8",
+      "name": "Search Contacts GHL2",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "11a05c60-5481-4d5b-bbf1-8d56a7273f76",
+              "leftValue": "={{ $json.total }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -440,
+        260
+      ],
+      "id": "16fe8082-fc9a-46e5-87e6-0b52e0794011",
+      "name": "If5"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"new {{$now.toString()}}\",\n  \"locationId\": \"{{ $('Set Account Fields').item.json.locationId }}\",\n  \"phone\": \"{{ $('Set Account Fields').item.json.from_number }}\",\n  \"tags\": [\n    \"new_inbound_contact\"\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "495ff3fb-5183-40c2-9a68-e36f29e16845",
+      "name": "Create Contact GHL2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/opportunities/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"pipelineId\": \"{{ $('Set Account Fields').item.json.sales_pipeline_id }}\",\n  \"locationId\": \"{{ $('Set Account Fields').item.json.locationId }}\",\n  \"name\": \"{{ $('Create Contact GHL2').item.json.contact.fullNameLowerCase }}\",\n  \"pipelineStageId\": \"{{ $('Set Account Fields').item.json.sales_pipeline_stage_id }}\",\n   \"status\": \"all\",\n  \"contactId\": \"{{ $('Create Contact GHL2').item.json.contact.id }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        0
+      ],
+      "id": "00618e3c-4d9a-4fc5-b2f7-0127c2e222e3",
+      "name": "Create Opportunity GHL",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Get input data from nodes\nconst customValuesData = $('Get Custom Values GHL1').item.json.custom_values || \"{}\";\nconst customFieldsData = $('Get Custom Fields GHL1').item.json.custom_fields || \"{}\";\nconst contactData = $('Create Contact GHL2').item.json || {}; // Changed: direct object, no string default\nconst conversationsData = $('Search Conversations GHL1').item.json || \"{}\";\nconst messagesOutput = $('Get Messages By Conversation ID GHL1').item.json || \"{}\";\nconst notesOutput = $('Get Notes GHL1').item.json || \"{}\";\nconst formattedNotes = $('Code Parse Notes1').item.json?.readableNotes || \"\";\nconst formattedConversations = $('Code Parse Notes1').item.json?.readableConversations || \"\";\nconst calendarData = $('Get Calendars GHL1').item.json.calendars || \"{}\";\nconst accountFields = $('Set Account Fields').item.json;\n\n// Parse only the JSON strings, not the contact data which is already an object\nconst customValuesObj = JSON.parse(customValuesData);\nconst customFieldsObj = JSON.parse(customFieldsData);\nconst contactObj = contactData; // Changed: no JSON.parse needed\nconst calendarObj = JSON.parse(calendarData);\n\n// Extract the contact data directly from the contact object\nconst contact = contactObj.contact || {};\n\n// Extract custom fields array from both sources\nconst accountCustomFields = customFieldsObj.customFields || [];\nconst contactCustomFields = contact.customFields || [];\nconst accountCustomValues = customValuesObj.customValues || [];\nconst calendars = calendarObj.calendars || [];\n\n// Create a mapping of field IDs to field names and keys\nconst fieldMap = {};\naccountCustomFields.forEach(field => {\n  // Convert field name to snake_case for variable names\n  const snakeCaseName = field.name\n    .toLowerCase()\n    .replace(/[^\\w\\s]/g, '')\n    .replace(/\\s+/g, '_');\n  \n  // If field.fieldKey starts with \"contact.\" remove that prefix\n  let fieldKey = field.fieldKey || \"\";\n  if (fieldKey.startsWith(\"contact.\")) {\n    fieldKey = fieldKey.substring(\"contact.\".length);\n  }\n  \n  fieldMap[field.id] = {\n    name: field.name,\n    fieldKey: fieldKey,\n    snakeCaseName: snakeCaseName\n  };\n  \n  // Also index by fieldKey for easy lookup if it exists\n  if (fieldKey) {\n    fieldMap[fieldKey] = {\n      name: field.name,\n      id: field.id,\n      snakeCaseName: snakeCaseName\n    };\n  }\n});\n\n// Create an object to store contact field values\nconst contactFieldValues = {};\n\n// Populate values from contact custom fields\ncontactCustomFields.forEach(field => {\n  if (fieldMap[field.id]) {\n    // Convert values to strings\n    contactFieldValues[fieldMap[field.id].snakeCaseName] = String(field.value || \"\");\n  }\n});\n\n// Safely get custom values with fallbacks for resilience\nconst getCustomValue = (name) => {\n  const value = accountCustomValues.find(cv => cv.name === name)?.value;\n  // Convert to string if it exists\n  return value !== undefined ? String(value) : '';\n};\n\n// Get essential values (using safe accessor functions)\nconst voiceAgentId = getCustomValue('Voice AI Agent ID Inbound');\nconst voiceAgentName = getCustomValue('Voice AI Agent Name Inbound');\nconst voiceAgentApiKey = getCustomValue('AI Call API Key');\n\n// Get optional values (won't break if they don't exist)\nconst salesCalendar1 = getCustomValue('Sales Calendar 1');\nconst salesCalendar2 = getCustomValue('Sales Calendar 2');\nconst onboardingCalendar = getCustomValue('Onboarding Calendar');\nconst customerSuccessCalendar = getCustomValue('Customer Success Calendar');\nconst businessName = getCustomValue('Business Name');\n\n// Format contact name with proper capitalization\nconst firstName = contact.firstNameLowerCase ? \n  contact.firstNameLowerCase.charAt(0).toUpperCase() + contact.firstNameLowerCase.slice(1) : \n  '';\nconst lastName = contact.lastNameLowerCase ? \n  contact.lastNameLowerCase.charAt(0).toUpperCase() + contact.lastNameLowerCase.slice(1) : \n  '';\nconst fullName = `${firstName} ${lastName}`.trim() || 'none';\n\n// Create a complete mapping of all calendars (no hardcoded names)\nconst calendarMap = {};\ncalendars.forEach(calendar => {\n  // Store by both original name and snake_case name for flexibility\n  const calendarName = calendar.name || \"\";\n  const snakeCaseName = calendarName\n    .toLowerCase()\n    .replace(/[^\\w\\s]/g, '')\n    .replace(/\\s+/g, '_');\n  \n  calendarMap[calendarName] = calendar.id;\n  calendarMap[snakeCaseName] = calendar.id;\n});\n\n// Dynamically detect and categorize calendars based on naming patterns\nconst calendarTypes = {\n  sales: ['sales', 'discovery', 'consultation'],\n  onboarding: ['onboarding', 'welcome', 'orientation'],\n  customer_success: ['success', 'support', 'check-in', 'checkin', 'follow-up', 'followup'],\n  referral: ['referral', 'partner']\n};\n\n// Initialize the calendar types object\nconst detectedCalendarTypes = {};\n\n// Map each calendar to a type based on name patterns\nObject.entries(calendarMap).forEach(([calendarName, calendarId]) => {\n  // Skip snake_case duplicates\n  if (calendarName.includes('_')) return;\n  \n  const lowerName = calendarName.toLowerCase();\n  \n  // Try to categorize this calendar\n  for (const [type, keywords] of Object.entries(calendarTypes)) {\n    if (keywords.some(keyword => lowerName.includes(keyword))) {\n      // First match for this type becomes the primary calendar for that type\n      if (!detectedCalendarTypes[type]) {\n        detectedCalendarTypes[type] = String(calendarId);\n      }\n    }\n  }\n});\n\n// Get connection details from Set Account Fields\nconst toNumber = String(accountFields.to_number || '');\nconst fromNumber = String(accountFields.from_number || '');\nconst privateIntegrationToken = String(accountFields.Authorization || '');\nconst locationId = String(accountFields.locationId || '');\nconst accountTimezone = String(accountFields['Account Timezone'] || 'America/New_York');\n\n// Create the dynamic variables object with all the enhanced context\nconst dynamicVariables = {\n  // Basic contact info\n  name: String(firstName || 'none'),\n  phone: String(contact.phone || 'none'),\n  email: String(contact.email || 'none'),\n  address: String(contact.address || 'none'),\n  full_name: String(fullName),\n  business_name: String(contact.businessName || contact.companyName || 'none'),\n  contact_id: String(contact.id || ''),\n  location_id: locationId,\n  private_integration_token: privateIntegrationToken,\n  account_company_name: businessName,\n  from_number: fromNumber,\n  to_number: toNumber,\n  account_timezone: accountTimezone,\n  voice_ai_agent_name: voiceAgentName,\n  voice_ai_agent_id: voiceAgentId,\n  voice_ai_agent_api_key: voiceAgentApiKey,\n  \n  // Calendar IDs (conditionally added)\n  sales_calendar_id: detectedCalendarTypes.sales || salesCalendar1 || '',\n  sales2_calendar_id: detectedCalendarTypes.referral || salesCalendar2 || '',\n  onboarding_calendar_id: detectedCalendarTypes.onboarding || onboardingCalendar || '',\n  customer_success_calendar_id: detectedCalendarTypes.customer_success || customerSuccessCalendar || '',\n  \n  // Add conversation and notes history\n  conversation_history: formattedConversations,\n  notes_history: formattedNotes,\n  \n  // Tags (if available)\n  tags: Array.isArray(contact.tags) ? contact.tags.map(tag => String(tag)).join(', ') : ''\n};\n\n// Add all custom field IDs and values to the dynamicVariables\naccountCustomFields.forEach(field => {\n  const snakeCaseName = fieldMap[field.id]?.snakeCaseName;\n  if (snakeCaseName) {\n    // Add field ID with snake_case format (with _id suffix)\n    dynamicVariables[`${snakeCaseName}_id`] = String(field.id);\n    \n    // Only add field values that actually exist for this contact\n    if (contactFieldValues[snakeCaseName] !== undefined) {\n      dynamicVariables[snakeCaseName] = contactFieldValues[snakeCaseName];\n    }\n  }\n});\n\n// Calendar map for easy access to all calendars\ndynamicVariables.calendar_map = JSON.stringify(calendarMap);\n\n// Create the call_inbound format structure (maintaining original format)\nconst callInbound = {\n  call_inbound: {\n    dynamic_variables: dynamicVariables\n  }\n};\n\n// Convert the object to a properly formatted JSON string\nconst jsonString = JSON.stringify(callInbound, null, 2);\n\n// Return an object with the jsonString as an easily mappable property\nreturn { jsonBody: jsonString };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2580,
+        0
+      ],
+      "id": "90a2c1b5-a394-44f1-b540-4255a3d999cd",
+      "name": "Match Final Values1",
+      "executeOnce": false,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $('Match Final Values1').first().json.jsonBody }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2820,
+        0
+      ],
+      "id": "9ef42db1-ec82-4ab5-8a0c-830fa9d1648d",
+      "name": "Respond to Webhook9"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Improved notes parser that's more dynamic and robust\nfunction processData() {\n  try {\n    // Get the raw outputs from the nodes\n    const conversationsRaw = $('Get Messages By Conversation ID GHL1').item.json.conversations_output;\n    const notesRaw = $('Get Notes GHL1').item.json.notes_output;\n    \n    // Parse the JSON strings\n    const conversationsData = JSON.parse(conversationsRaw);\n    const notesData = JSON.parse(notesRaw);\n    \n    // Format the data for humans and AI consumption\n    const readableConversations = formatConversations(conversationsData);\n    const readableNotes = formatNotesImproved(notesData);\n    \n    // Return the result\n    return [{ \n      json: {\n        readableConversations: readableConversations,\n        readableNotes: readableNotes\n      } \n    }];\n  } catch (error) {\n    return [{ json: { error: error.message } }];\n  }\n}\n\n// Format conversations (keeping existing implementation)\nfunction formatConversations(data) {\n  let result = \"== CONVERSATION HISTORY ==\\n\\n\";\n  \n  if (!data.messages || !data.messages.messages || data.messages.messages.length === 0) {\n    return result + \"No conversations found.\";\n  }\n  \n  const messages = data.messages.messages;\n  \n  for (let i = 0; i < messages.length; i++) {\n    const msg = messages[i];\n    \n    // Add date\n    result += \"[\" + new Date(msg.dateAdded).toLocaleString() + \"] \";\n    \n    // Add direction\n    if (msg.direction === \"inbound\") {\n      result += \"INCOMING \";\n    } else {\n      result += \"OUTGOING \";\n    }\n    \n    // Add type\n    if (msg.messageType === \"TYPE_ACTIVITY_OPPORTUNITY\") {\n      result += \"Opportunity Activity\";\n    } else if (msg.messageType === \"TYPE_SMS\") {\n      result += \"SMS\";\n    } else if (msg.messageType === \"TYPE_CALL\") {\n      result += \"Call\";\n    } else {\n      result += msg.messageType;\n    }\n    \n    // Add status if available\n    if (msg.status) {\n      result += \" (\" + msg.status + \")\";\n    }\n    \n    result += \":\\n\";\n    \n    // Add body if available\n    if (msg.body) {\n      result += msg.body + \"\\n\";\n    }\n    \n    // Add separator\n    if (i < messages.length - 1) {\n      result += \"\\n--------------------------------------------------\\n\\n\";\n    }\n  }\n  \n  return result;\n}\n\n// Improved notes formatter that's more flexible\nfunction formatNotesImproved(data) {\n  let result = \"== CONTACT NOTES ==\\n\\n\";\n  \n  if (!data.notes || data.notes.length === 0) {\n    return result + \"No notes found.\";\n  }\n  \n  const notes = data.notes;\n  \n  for (let i = 0; i < notes.length; i++) {\n    const note = notes[i];\n    \n    result += \"NOTE CREATED: \" + new Date(note.dateAdded).toLocaleString() + \"\\n\\n\";\n    \n    // Extract data dynamically from the note body\n    try {\n      // Get the note body and try to parse key-value pairs\n      const noteBody = note.body;\n      \n      // Check if the note body looks like it contains JSON-like key-value pairs\n      if (noteBody.includes(\"\\\"key\\\"\") && noteBody.includes(\"\\\"field_value\\\"\")) {\n        // Parse the pseudo-JSON structure\n        const entries = extractKeyValuePairs(noteBody);\n        \n        // Group entries by category\n        const callDetails = {};\n        let transcript = \"\";\n        let summary = \"\";\n        \n        // Process each entry\n        entries.forEach(entry => {\n          const key = entry.key;\n          const value = entry.value;\n          \n          // Handle special cases\n          if (key === \"AI Call Transcript\") {\n            transcript = value;\n          } else if (key === \"AI Call Summary\") {\n            summary = value;\n          } else {\n            // Store other fields in the details object\n            callDetails[key] = value;\n          }\n        });\n        \n        // Output formatted data (Details first)\n        result += \"=== CALL DETAILS ===\\n\";\n        \n        // Organize details into categories for better readability\n        const categories = {\n          \"Basic Info\": [\"AI Call Type\", \"AI Call Contact Name\", \"AI Call Duration\"],\n          \"Outcome\": [\"AI Call Outcome\", \"AI Call Outcome Reason\"],\n          \"Appointment\": [\"AI Call Appointment DateTime\"],\n          \"Contact Info\": [\"AI Call Contact Email\", \"AI Call Contact Phone\"],\n          \"Technical\": [\"AI Call Recording\", \"AI Call Timestamp\", \"AI Call Ended Reason\"]\n        };\n        \n        // Display details by category\n        for (const [category, fields] of Object.entries(categories)) {\n          let categoryHasValues = false;\n          let categoryContent = \"\";\n          \n          fields.forEach(field => {\n            if (callDetails[field] && callDetails[field] !== \"none\" && callDetails[field] !== \"not_detected\") {\n              categoryContent += `• ${field.replace('AI Call ', '')}: ${callDetails[field]}\\n`;\n              categoryHasValues = true;\n            }\n          });\n          \n          if (categoryHasValues) {\n            result += `\\n${category}:\\n${categoryContent}`;\n          }\n        }\n        \n        // Add any remaining fields that weren't in specific categories\n        let otherFields = \"\";\n        for (const [key, value] of Object.entries(callDetails)) {\n          if (value && value !== \"none\" && value !== \"not_detected\") {\n            // Check if this field was already included in a category\n            let alreadyIncluded = false;\n            for (const fields of Object.values(categories)) {\n              if (fields.includes(key)) {\n                alreadyIncluded = true;\n                break;\n              }\n            }\n            \n            if (!alreadyIncluded) {\n              otherFields += `• ${key.replace('AI Call ', '')}: ${value}\\n`;\n            }\n          }\n        }\n        \n        if (otherFields) {\n          result += \"\\nOther Details:\\n\" + otherFields;\n        }\n        \n        // Add summary if present\n        if (summary) {\n          result += \"\\n=== CALL SUMMARY ===\\n\" + summary + \"\\n\";\n        }\n        \n        // Add transcript if present (full transcript, but with improved formatting)\n        if (transcript) {\n          result += \"\\n=== FULL TRANSCRIPT ===\\n\\n\";\n          \n          // Improve transcript readability by formatting agent/user exchanges\n          const formattedTranscript = formatTranscript(transcript);\n          result += formattedTranscript + \"\\n\";\n        }\n      } else {\n        // If not in the expected format, just include the raw note body\n        result += \"NOTE CONTENT:\\n\" + noteBody + \"\\n\";\n      }\n    } catch (error) {\n      // Fallback if parsing fails\n      result += \"NOTE CONTENT (raw):\\n\" + note.body + \"\\n\";\n    }\n    \n    // Add separator between notes\n    if (i < notes.length - 1) {\n      result += \"\\n\" + \"=\".repeat(50) + \"\\n\\n\";\n    }\n  }\n  \n  return result;\n}\n\n// Helper function to format transcript for better readability\nfunction formatTranscript(transcript) {\n  // Replace escaped newlines with actual newlines\n  let formatted = transcript.replace(/\\\\n/g, '\\n');\n  \n  // Split into lines\n  const lines = formatted.split('\\n');\n  let result = '';\n  \n  // Process each line\n  for (let i = 0; i < lines.length; i++) {\n    const line = lines[i].trim();\n    \n    if (line.startsWith('Agent:')) {\n      // Format agent lines\n      result += line + '\\n';\n    } else if (line.startsWith('User:')) {\n      // Add spacing before user responses and format\n      if (i > 0) result += '\\n';\n      result += line + '\\n';\n    } else {\n      // Add other lines as-is\n      result += line + '\\n';\n    }\n  }\n  \n  return result;\n}\n\n\n// Helper function to extract key-value pairs from the pseudo-JSON structure\nfunction extractKeyValuePairs(text) {\n  const entries = [];\n  const lines = text.split(\"\\n\");\n  \n  let currentKey = null;\n  let currentValue = null;\n  \n  for (let i = 0; i < lines.length; i++) {\n    const line = lines[i].trim();\n    \n    // Look for key lines\n    if (line.includes(\"\\\"key\\\"\") && line.includes(\":\")) {\n      // Extract the key name\n      const keyMatch = line.match(/\\\"key\\\":\\s*\\\"([^\\\"]+)\\\"/);\n      if (keyMatch && keyMatch[1]) {\n        currentKey = keyMatch[1];\n      }\n    }\n    \n    // Look for field_value lines\n    if (line.includes(\"\\\"field_value\\\"\") && line.includes(\":\")) {\n      // Extract the value\n      const valueMatch = line.match(/\\\"field_value\\\":\\s*\\\"(.*?)\\\"/);\n      if (valueMatch) {\n        // Handle escaped quotes within the value\n        currentValue = valueMatch[1].replace(/\\\\\"/g, '\"').replace(/\\\\\\\\n/g, '\\n');\n        \n        // If we have both key and value, add them to our entries\n        if (currentKey) {\n          entries.push({\n            key: currentKey,\n            value: currentValue\n          });\n          \n          // Reset for next pair\n          currentKey = null;\n          currentValue = null;\n        }\n      }\n    }\n  }\n  \n  return entries;\n}\n\n// Run the function and return the result\nreturn processData();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1580,
+        0
+      ],
+      "id": "7ce1bc85-9c7d-44a0-8198-739d6a029a42",
+      "name": "Code Parse Notes1",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/contacts/{{ $('Create Contact GHL2').item.json.contact.id }}/notes",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "notes_output"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        0
+      ],
+      "id": "cd6df521-9b56-4ba3-b2cd-30ceb6027cf2",
+      "name": "Get Notes GHL1",
+      "retryOnFail": false,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/conversations/{{ $('Search Conversations GHL1').item.json.conversations[0].id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "conversations_output"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1080,
+        0
+      ],
+      "id": "50098221-f8f9-4c73-bfe4-a2a89259a2dd",
+      "name": "Get Messages By Conversation ID GHL1",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://services.leadconnectorhq.com/conversations/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "contactId",
+              "value": "={{ $('Create Contact GHL2').item.json.contact.id }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        820,
+        0
+      ],
+      "id": "bddfe5ec-b7f9-4095-a23a-2be90d15e6d8",
+      "name": "Search Conversations GHL1",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://services.leadconnectorhq.com/calendars/",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "locationId",
+              "value": "={{ $('Set Account Fields').item.json.locationId }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "calendars"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1820,
+        0
+      ],
+      "id": "0c2540d8-cda8-4e74-be04-d6f8c5349b8d",
+      "name": "Get Calendars GHL1",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/locations/{{ $('Set Account Fields').item.json.locationId }}/customFields",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "custom_fields"
+            }
+          }
+        }
+      },
+      "id": "0e84f28b-c394-4796-8ca9-cc3a831a6636",
+      "name": "Get Custom Fields GHL1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2080,
+        0
+      ],
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/locations/{{ $('Set Account Fields').item.json.locationId }}/customValues",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "custom_values"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2340,
+        0
+      ],
+      "id": "da065364-9aef-4d1e-b313-fed371432d73",
+      "name": "Get Custom Values GHL1",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        580,
+        0
+      ],
+      "id": "2437e4d4-87ae-4fe3-85a0-297042d6e8b1",
+      "name": "Wait",
+      "webhookId": "dcd131e8-2368-4129-a12e-c50c59963778"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/calendars/{{ $('Set get_free_slots Fields').item.json.calendar_id }}/free-slots",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "startDate",
+              "value": "={{ $('Set get_free_slots Fields').item.json.start_date }}"
+            },
+            {
+              "name": "endDate",
+              "value": "={{ $('Set get_free_slots Fields').item.json.end_date }}"
+            },
+            {
+              "name": "timezone",
+              "value": "={{ $('Set get_free_slots Fields').item.json.timezone }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set get_free_slots Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "free_slots"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1120,
+        1300
+      ],
+      "id": "4210f1b2-1e5a-4725-ad50-708e54a470b8",
+      "name": "Get Free Slots GHL"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8a6d74ca-7a0d-46d4-aded-de2b596b9e10",
+              "leftValue": "={{ $('Get Free Slots GHL').item.json.free_slots }}",
+              "rightValue": "slots",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -900,
+        1300
+      ],
+      "id": "0183111d-f8fe-47c7-9e9c-3735a00973e5",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Get Free Slots GHL').item.json.free_slots) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -580,
+        1240
+      ],
+      "id": "7fcbebaf-47ca-49df-afad-1c64a955a906",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify(\"No availability for the requested date, please suggest a new date to chaeck for availability. Ask user for a new date to check availability.\") }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -580,
+        1400
+      ],
+      "id": "ed818f97-3b46-4b1f-b282-e6e2b0f5c098",
+      "name": "Respond to Webhook4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set create_appointment Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"locationId\": \"{{ $('Set create_appointment Fields').item.json['Location ID'] }}\",\n  \"page\": 1,\n  \"pageLimit\": 20,\n  \"filters\": [\n    {\n      \"field\": \"phone\",\n      \"operator\": \"eq\",\n      \"value\": \"{{ $('Set create_appointment Fields').item.json.phone }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1160,
+        1720
+      ],
+      "id": "dd035cef-e2e4-4381-89bb-5ff0997f268b",
+      "name": "Search Contacts GHL1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/calendars/events/appointments",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set create_appointment Fields').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "calendarId",
+              "value": "={{ $('Set create_appointment Fields').item.json.calendar_id }}"
+            },
+            {
+              "name": "locationId",
+              "value": "={{ $('Set create_appointment Fields').item.json['Location ID'] }}"
+            },
+            {
+              "name": "contactId",
+              "value": "={{ $('Search Contacts GHL1').item.json.contacts[0].id }}"
+            },
+            {
+              "name": "startTime",
+              "value": "={{ $('Set create_appointment Fields').item.json.start_time }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -900,
+        1720
+      ],
+      "id": "6820fe30-495f-4a77-83b4-f3f1c1f00583",
+      "name": "Create Appointment GHL",
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Create Appointment GHL').item.json.title + \", \" + $('Create Appointment GHL').item.json.status + \", \" + $('Create Appointment GHL').item.json.appoinmentStatus + \", google meet\") }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        1580
+      ],
+      "id": "99cf9f84-4bad-47e8-9e8d-f4e1fb357e3e",
+      "name": "Respond to Webhook5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7d2926c7-3bc3-457d-8d99-8593c748e6fb",
+              "leftValue": "={{ $('Create Appointment GHL').first().json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -680,
+        1720
+      ],
+      "id": "b15a0c95-30a1-4d88-a71c-b89bd832bf25",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify(\"We had an issue booking the appointment, please let the caller know that we will reach out to confirm the appointment and all is well and we can assume the requested time is good to go.\" ) }}",
+        "options": {}
+      },
+      "id": "ad46bf34-c436-4022-b7e2-9c845bd96cab",
+      "name": "Respond to Webhook6",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -300,
+        1780
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Make sure I Look Right 👽 !!!",
+        "height": 80,
+        "width": 250
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1500,
+        140
+      ],
+      "id": "d89ef819-2403-447e-8df5-747fc610840d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Make sure I Look Right 👽 !!!",
+        "height": 80,
+        "width": 250
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1440,
+        1180
+      ],
+      "id": "81bfa077-8502-43e3-8675-448676fa42b5",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Make sure I Look Right 👽 !!!",
+        "height": 80,
+        "width": 250
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1440,
+        1600
+      ],
+      "id": "fabb911a-33e6-450a-b7b4-15d09c5be705",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "53abe924-6313-4d2f-ba94-43a3f4bfa0de",
+              "name": "call_id",
+              "value": "={{ $('Webhook').item.json.body.call.call_id }}",
+              "type": "string"
+            },
+            {
+              "id": "327e18ef-95b6-4149-8241-4c19960837e5",
+              "name": "business_name",
+              "value": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.business_name }}",
+              "type": "string"
+            },
+            {
+              "id": "785e19fd-15d8-4683-966f-a10bfc3875d4",
+              "name": "full_name",
+              "value": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.full_name }}",
+              "type": "string"
+            },
+            {
+              "id": "738db31b-3e23-464d-a0a6-2543415a55dd",
+              "name": "phone",
+              "value": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "c170cf37-2c30-4067-ad65-c6f8a6049b08",
+              "name": "email",
+              "value": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.email }}",
+              "type": "string"
+            },
+            {
+              "id": "11bc5a91-ce04-4c1f-a84b-d17cd30dfb28",
+              "name": "contact_id",
+              "value": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.contact_id }}",
+              "type": "string"
+            },
+            {
+              "id": "5b18ed28-c90d-4375-b1e2-fd5b09444b5a",
+              "name": "private_integration_token",
+              "value": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.private_integration_token }}",
+              "type": "string"
+            },
+            {
+              "id": "9aeb8166-81b4-4d88-a031-cd16bef2ed46",
+              "name": "ai_call_timestamp",
+              "value": "={{ $('Webhook').item.json.body.call.start_timestamp }}",
+              "type": "number"
+            },
+            {
+              "id": "ab719a9f-d868-496c-9fc8-b7abd5b4090c",
+              "name": "ai_call_duration",
+              "value": "={{ $('Webhook').item.json.body.call.call_cost.total_duration_seconds }}",
+              "type": "number"
+            },
+            {
+              "id": "913518e9-e64a-4643-95c4-16385480bb1f",
+              "name": "nombre_contacto",
+              "value": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.nombre_contacto }}",
+              "type": "string"
+            },
+            {
+              "id": "cc2117c7-e99e-4c23-8f69-75d87e4f3c15",
+              "name": "from_number",
+              "value": "={{ $('Webhook').item.json.body.call.from_number }}",
+              "type": "string"
+            },
+            {
+              "id": "63182fc4-f463-4e78-b7ad-8e25fc302c06",
+              "name": "ai_call_ended_reason",
+              "value": "={{ $('Webhook').item.json.body.call.disconnection_reason }}",
+              "type": "string"
+            },
+            {
+              "id": "594a23be-1048-4372-bcd1-c5651420d44d",
+              "name": "grabacion_llamada_ai",
+              "value": "={{ $('Webhook').item.json.body.call.recording_url }}",
+              "type": "string"
+            },
+            {
+              "id": "98f2d67d-3095-4df9-8ac0-b489dd39b181",
+              "name": "voice_ai_agent_name",
+              "value": "={{ $('Webhook').item.json.body.call.agent_name }}",
+              "type": "string"
+            },
+            {
+              "id": "50c1c5aa-892b-4417-89ff-6bd8ac97b26b",
+              "name": "ai_call_cost",
+              "value": "={{ $('Webhook').item.json.body.call.call_cost.total_duration_unit_price }}",
+              "type": "number"
+            },
+            {
+              "id": "407d0e24-0266-4a40-a22a-21db23844419",
+              "name": "to_number",
+              "value": "={{ $('Webhook').item.json.body.call.to_number }}",
+              "type": "string"
+            },
+            {
+              "id": "7af2b62c-41ec-423c-ad4c-856b770833ac",
+              "name": "from_number",
+              "value": "={{ $('Webhook').item.json.body.call.from_number }}",
+              "type": "string"
+            },
+            {
+              "id": "4132ed0e-4535-4b14-9b7a-71671714ab2f",
+              "name": "retell_api_key",
+              "value": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.voice_ai_agent_api_key }}",
+              "type": "string"
+            },
+            {
+              "id": "d88d25e6-dd00-43c8-9fb8-72b5cfdba9ec",
+              "name": "agent id",
+              "value": "={{ $('Webhook').item.json.body.call.agent_id }}",
+              "type": "string"
+            },
+            {
+              "id": "38bf7e3d-d305-4e73-8fde-963156287e6b",
+              "name": "location id",
+              "value": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.location_id }}",
+              "type": "string"
+            },
+            {
+              "id": "9a2a6692-9529-482f-be84-85c75d74b2a1",
+              "name": "fecha_hora_cita_final",
+              "value": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.fecha_hora_cita_final }}",
+              "type": "string"
+            },
+            {
+              "id": "82757d33-94b3-4c2e-ada7-c16b26763e00",
+              "name": "tiene_capital_disponible",
+              "value": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.tiene_capital_disponible }}",
+              "type": "string"
+            },
+            {
+              "id": "4b6bc1c2-8583-4be6-b068-8377996274a9",
+              "name": "es_tomador_decisiones",
+              "value": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.es_tomador_decisiones }}",
+              "type": "string"
+            },
+            {
+              "id": "28d49120-56d6-47e4-853a-24a9d78323df",
+              "name": "reporte_del_lead",
+              "value": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.reporte_del_lead }}",
+              "type": "string"
+            },
+            {
+              "id": "4e7270f7-3d6b-4706-a3c3-0d6b2ae4ad4e",
+              "name": "calidad_llamada",
+              "value": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.calidad_llamada }}",
+              "type": "string"
+            },
+            {
+              "id": "ef2bdf0f-e28d-41f2-a765-26e12fe5c745",
+              "name": "lead_calificado",
+              "value": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.lead_calificado }}",
+              "type": "string"
+            },
+            {
+              "id": "0ffed9a0-a7bd-407d-a83d-129ca7a73d95",
+              "name": "confirmo_asistencia",
+              "value": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.confirmo_asistencia }}",
+              "type": "string"
+            },
+            {
+              "id": "ed5f2dc9-dcc1-49f0-acb8-d09e43b3bef5",
+              "name": "motivo_no_asistencia",
+              "value": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.motivo_no_asistencia }}",
+              "type": "string"
+            },
+            {
+              "id": "a99469bf-9daa-4bf1-ba9c-d681ed68ddce",
+              "name": "notas_adicionales",
+              "value": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.notas_adicionales }}",
+              "type": "string"
+            },
+            {
+              "id": "09d65c5a-fd98-44a1-ac4b-d3650727f651",
+              "name": "resultado_llamada_ai",
+              "value": "={{ $json.body.call.call_analysis.custom_analysis_data.resultado_llamada_ai }}",
+              "type": "string"
+            },
+            {
+              "id": "7dbac27a-a532-4ea9-a402-6a8b0b22eae5",
+              "name": "Fecha y Hora",
+              "value": "={{ $now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1380,
+        980
+      ],
+      "id": "90794850-7995-48c7-9e92-a5d6eb5b1c1c",
+      "name": "Set Fields"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.retellai.com/get-agent/{{ $('Set Fields').item.json['agent id'] }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Fields').item.json.retell_api_key }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1140,
+        980
+      ],
+      "id": "a16c753a-c4da-4fc3-be99-cde31f2e11e8",
+      "name": "Get Retell Agent",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://services.leadconnectorhq.com/contacts/{{ $('Set Fields').item.json.contact_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Fields').item.json.private_integration_token }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"customFields\": [\n {\n      \"key\": \"tipo_de_llamada_ai\",\n      \"field_value\": \"{{ $('Webhook').item.json.body.call.direction }}\"\n    },\n  {\n      \"key\": \"contesto\",\n      \"field_value\": \"{{ $('Set Fields').item.json.resultado_llamada_ai || \"no respondio\"}}\"\n    },\n   {\n      \"key\": \"grabacion_llamada_ai\",\n      \"field_value\": \"{{ $('Set Fields').item.json.grabacion_llamada_ai }}\"\n    },\n   {\n      \"key\": \"razon_final_llamada\",\n      \"field_value\": \"{{ $('Set Fields').item.json.ai_call_ended_reason }}\"\n    },\n   {\n      \"key\": \"ai_coste\",\n      \"field_value\": \"{{ $('Set Fields').item.json.ai_call_cost }}\"\n    },\n    {\n      \"key\": \"confirmo_asistencia\",\n      \"field_value\": \"{{ $('Set Fields').item.json.confirmo_asistencia }}\"\n    },\n    {\n      \"key\": \"lead_calificado\",\n      \"field_value\": \"{{ $('Set Fields').item.json.lead_calificado }}\"\n    },\n    {\n      \"key\": \"motivo_no_asistencia\",\n      \"field_value\": \"{{ $('Set Fields').item.json.motivo_no_asistencia }}\"\n    },\n    {\n      \"key\": \"fecha_hora_cita_final\",\n      \"field_value\": \"{{ $('Set Fields').item.json.fecha_hora_cita_final }}\"\n    },\n    {\n      \"key\": \"tiene_dinero\",\n      \"field_value\": \"{{ $('Set Fields').item.json.tiene_capital_disponible }}\"\n    },\n    {\n      \"key\": \"toma_decisiones\",\n      \"field_value\": \"{{ $('Set Fields').item.json.es_tomador_decisiones }}\"\n    },\n    {\n      \"key\": \"reporte_del_lead\",\n      \"field_value\": \"{{ $('Set Fields').item.json.reporte_del_lead }}\"\n    },\n    {\n      \"key\": \"nombre_contacto\",\n      \"field_value\": \"{{ $('Set Fields').item.json.nombre_contacto }}\"\n    },\n    {\n      \"key\": \"calidad_llamada\",\n      \"field_value\": \"{{ $('Set Fields').item.json.calidad_llamada }}\"\n    },\n    {\n      \"key\": \"notas_adicionales\",\n      \"field_value\": \"{{ $('Set Fields').item.json.notas_adicionales }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -640,
+        980
+      ],
+      "id": "31f502f2-b511-41b1-9158-1a299ac38dc5",
+      "name": "Update Contact GHL"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://services.leadconnectorhq.com/contacts/{{ $('Set Fields').item.json.contact_id }}/notes",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Fields').item.json.private_integration_token }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "body",
+              "value": "=Confirmó Asistencia:\n{{ $('Set Fields').item.json.confirmo_asistencia }}\n\nLead Calificado:\n{{ $('Set Fields').item.json.lead_calificado }}\n\nMotivo No Asistencia:\n{{ $('Set Fields').item.json.motivo_no_asistencia }}\n\nFecha Hora Cita Final:\n{{ $('Set Fields').item.json.fecha_hora_cita_final }}\n\nTiene Capital Disponible:\n{{ $('Set Fields').item.json.tiene_capital_disponible }}\n\nEs Tomador Decisiones:\n{{ $('Set Fields').item.json.es_tomador_decisiones }}\n\nNombre Contacto:\n{{ $('Set Fields').item.json.nombre_contacto }}\n\nCalidad Llamada:\n{{ $('Set Fields').item.json.calidad_llamada }}\n\nNotas Adicionales:\n{{ $('Set Fields').item.json.notas_adicionales }}\n\nReporte del Lead:\n{{ $('Set Fields').item.json.reporte_del_lead }}\n\nAI Call Recording:\n{{ $('Set Fields').item.json.grabacion_llamada_ai }}\n\nRazón Final Llamada:\n{{ $('Set Fields').item.json.ai_call_ended_reason }}\n\nAI Coste:\n{{ $('Set Fields').item.json.ai_call_cost }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "85ccecbf-28fd-40c2-b111-66d909a8767c",
+      "name": "Create Note GHL",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -380,
+        980
+      ],
+      "retryOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://services.leadconnectorhq.com/contacts/{{ $('Set Fields').item.json.contact_id }}/tags",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Fields').item.json.private_integration_token }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"tags\": [\n    \"{{ \n  $('Webhook').item.json.body.call.call_analysis.call_successful === false\n  ? \"no_respondio\"\n  : $('Set Fields').item.json.resultado_llamada_ai || \"respondio\"\n}}\"\n  ]\n}",
+        "options": {}
+      },
+      "id": "57cb6d3f-7333-48b9-b153-cc420f4e8bc9",
+      "name": "Add Tag GHL",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -120,
+        980
+      ],
+      "retryOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Fields').item.json.private_integration_token }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"locationId\": \"{{ $('Set Fields').item.json['location id'] }}\",\n  \"page\": 1,\n  \"pageLimit\": 20,\n  \"filters\": [\n    {\n      \"field\": \"phone\",\n      \"operator\": \"eq\",\n      \"value\": \"{{ $('Set Fields').item.json.phone }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -880,
+        980
+      ],
+      "id": "454e0f0e-ca6e-4501-9631-3a04616ecb16",
+      "name": "Search Contacts GHL3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.retellai.com/v2/create-phone-call",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields1').item.json['Voice AI Agent API Key'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.jsonBody }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1480,
+        620
+      ],
+      "id": "2a31fe2a-38e0-4dcd-8cbf-52e50ff02fca",
+      "name": "Create Phone Call Retell"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields1').first().json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"locationId\": \"{{ $('Set Account Fields1').first().json.locationId }}\",\n  \"page\": 1,\n  \"pageLimit\": 20,\n  \"filters\": [\n    {\n      \"field\": \"phone\",\n      \"operator\": \"eq\",\n      \"value\": \"{{ $('Set Account Fields1').first().json.to_number }}\"\n    }\n  ]\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "contact_details"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1140,
+        620
+      ],
+      "id": "db270d96-5fe0-4f10-afc3-426d8bb5a7ff",
+      "name": "Search Contacts GHL5",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "10ff319f-7b29-46f9-a1cb-d21b768a19c3",
+              "name": "Authorization",
+              "value": "={{ THIS NEEDS TO BE PRIVATE INTEGRATION TOKEN }}",
+              "type": "string"
+            },
+            {
+              "id": "ce3377ae-e394-4739-a8dd-d099b02ee1d2",
+              "name": "locationId",
+              "value": "={{ THIS NEEDS TO BE LOCATION ID }}",
+              "type": "string"
+            },
+            {
+              "id": "65dd36bb-645c-4aac-8135-952b822b77cd",
+              "name": "Account Timezone",
+              "value": "={{ THIS NEEDS TO BE CONTINENT CITY TIMEZONE }}",
+              "type": "string"
+            },
+            {
+              "id": "96b9ae16-deb6-4029-88e4-22f8c4e2661c",
+              "name": "to_number",
+              "value": "={{ $('Webhook').item.json.body.customData['Contact Phone Number'] }}",
+              "type": "string"
+            },
+            {
+              "id": "1c8611cd-5f66-4f6e-b208-bfa2c1845280",
+              "name": "from_number",
+              "value": "={{ $('Webhook').item.json.body.customData['AI Phone Number'] }}",
+              "type": "string"
+            },
+            {
+              "id": "51ef3fb4-22e8-4de3-bd0f-057e3321886d",
+              "name": "Voice AI Agent API Key",
+              "value": "={{ $json.body.customData['Voice AI Agent API Key'] }}",
+              "type": "string"
+            },
+            {
+              "id": "1bd15ec3-6a7c-420c-8066-468d47279b67",
+              "name": "Agent ID",
+              "value": "={{ $('Webhook').item.json.body.customData['Voice AI Agent ID'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1380,
+        620
+      ],
+      "id": "6f6b0357-70e9-4dbb-b0d2-5fc19ced148a",
+      "name": "Set Account Fields1"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Get input data from nodes (all pre-formatted as strings)\nconst customValuesData = $('Get Custom Values GHL2').item.json.custom_values || \"{}\";\nconst customFieldsData = $('Get Custom Fields GHL2').item.json.custom_fields || \"{}\";\nconst contactData = $('Search Contacts GHL5').item.json.contact_details || \"{}\";\n// Handle error cases for nodes that might fail\nconst conversationsData = $('Search Conversations GHL2').item.json?.error ? \"{}\" : ($('Search Conversations GHL2').item.json || \"{}\");\nconst messagesOutput = $('Get Messages By Conversation ID GHL2').item.json?.error ? \"{}\" : ($('Get Messages By Conversation ID GHL2').item.json || \"{}\");\nconst notesOutput = $('Get Notes GHL2').item.json?.error ? \"{}\" : ($('Get Notes GHL2').item.json || \"{}\");\n// Check if Code Parse Notes has error before accessing properties\nconst formattedNotes = $('Code Parse Notes2').item.json?.error ? \"\" : ($('Code Parse Notes2').item.json?.readableNotes || \"\");\nconst formattedConversations = $('Code Parse Notes2').item.json?.error ? \"\" : ($('Code Parse Notes2').item.json?.readableConversations || \"\");\nconst calendarData = $('Get Calendars GHL2').item.json.calendars || \"{}\";\nconst accountFields = $('Set Account Fields1').item.json;\n\n// Parse the JSON strings to objects\nconst customValuesObj = JSON.parse(customValuesData);\nconst customFieldsObj = JSON.parse(customFieldsData);\nconst contactObj = JSON.parse(contactData);\nconst calendarObj = JSON.parse(calendarData);\n\n// Extract the contact data from the first contact in the array\nconst contact = contactObj.contacts && contactObj.contacts.length > 0 ? contactObj.contacts[0] : {};\n\n// Get connection details from Set Account Fields (moved up before the check)\nconst toNumber = String(accountFields.to_number || '');\nconst fromNumber = String(accountFields.from_number || '');\nconst privateIntegrationToken = String(accountFields.Authorization || '');\nconst locationId = String(accountFields.locationId || '');\nconst accountTimezone = String(accountFields['Account Timezone'] || 'America/New_York');\nconst retellApiKey = String(accountFields['Voice AI Agent API Key'] || '');\nconst agentId = String(accountFields['Agent ID'] || ''); // ADD THIS LINE\n\n// Extract custom fields array from both sources\nconst accountCustomFields = customFieldsObj.customFields || [];\nconst contactCustomFields = contact.customFields || [];\nconst accountCustomValues = customValuesObj.customValues || [];\nconst calendars = calendarObj.calendars || [];\n\n// Create a mapping of field IDs to field names and keys\nconst fieldMap = {};\naccountCustomFields.forEach(field => {\n  // Convert field name to snake_case for variable names\n  const snakeCaseName = field.name\n    .toLowerCase()\n    .replace(/[^\\w\\s]/g, '')\n    .replace(/\\s+/g, '_');\n  \n  // If field.fieldKey starts with \"contact.\" remove that prefix\n  let fieldKey = field.fieldKey || \"\";\n  if (fieldKey.startsWith(\"contact.\")) {\n    fieldKey = fieldKey.substring(\"contact.\".length);\n  }\n  \n  fieldMap[field.id] = {\n    name: field.name,\n    fieldKey: fieldKey,\n    snakeCaseName: snakeCaseName\n  };\n  \n  // Also index by fieldKey for easy lookup if it exists\n  if (fieldKey) {\n    fieldMap[fieldKey] = {\n      name: field.name,\n      id: field.id,\n      snakeCaseName: snakeCaseName\n    };\n  }\n});\n\n// Create an object to store contact field values\nconst contactFieldValues = {};\n\n// Populate values from contact custom fields\ncontactCustomFields.forEach(field => {\n  if (fieldMap[field.id]) {\n    // Convert values to strings\n    contactFieldValues[fieldMap[field.id].snakeCaseName] = String(field.value || \"\");\n  }\n});\n\n// Safely get custom values with fallbacks for resilience\nconst getCustomValue = (name) => {\n  const value = accountCustomValues.find(cv => cv.name === name)?.value;\n  // Convert to string if it exists\n  return value !== undefined ? String(value) : '';\n};\n\n// Get essential values (using safe accessor functions)\nconst voiceAgentId = getCustomValue('Voice AI Agent ID Inbound');\nconst voiceAgentName = getCustomValue('Voice AI Agent Name Inbound');\nconst voiceAgentApiKey = getCustomValue('AI Call API Key');\n\n// Get optional values (won't break if they don't exist)\nconst salesCalendar1 = getCustomValue('Sales Calendar 1');\nconst salesCalendar2 = getCustomValue('Sales Calendar 2');\nconst onboardingCalendar = getCustomValue('Onboarding Calendar');\nconst customerSuccessCalendar = getCustomValue('Customer Success Calendar');\nconst businessName = getCustomValue('Business Name');\n\n\n\n// Create a complete mapping of all calendars (no hardcoded names)\nconst calendarMap = {};\ncalendars.forEach(calendar => {\n  // Store by both original name and snake_case name for flexibility\n  const calendarName = calendar.name || \"\";\n  const snakeCaseName = calendarName\n    .toLowerCase()\n    .replace(/[^\\w\\s]/g, '')\n    .replace(/\\s+/g, '_');\n  \n  calendarMap[calendarName] = calendar.id;\n  calendarMap[snakeCaseName] = calendar.id;\n});\n\n// Dynamically detect and categorize calendars based on naming patterns\nconst calendarTypes = {\n  sales: ['sales', 'discovery', 'consultation'],\n  onboarding: ['onboarding', 'welcome', 'orientation'],\n  customer_success: ['success', 'support', 'check-in', 'checkin', 'follow-up', 'followup'],\n  referral: ['referral', 'partner']\n};\n\n// Initialize the calendar types object\nconst detectedCalendarTypes = {};\n\n// Map each calendar to a type based on name patterns\nObject.entries(calendarMap).forEach(([calendarName, calendarId]) => {\n  // Skip snake_case duplicates\n  if (calendarName.includes('_')) return;\n  \n  const lowerName = calendarName.toLowerCase();\n  \n  // Try to categorize this calendar\n  for (const [type, keywords] of Object.entries(calendarTypes)) {\n    if (keywords.some(keyword => lowerName.includes(keyword))) {\n      // First match for this type becomes the primary calendar for that type\n      if (!detectedCalendarTypes[type]) {\n        detectedCalendarTypes[type] = String(calendarId);\n      }\n    }\n  }\n});\n\n// Format contact name with proper capitalization\nconst firstName = contact.firstNameLowerCase ? \n  contact.firstNameLowerCase.charAt(0).toUpperCase() + contact.firstNameLowerCase.slice(1) : \n  '';\nconst lastName = contact.lastNameLowerCase ? \n  contact.lastNameLowerCase.charAt(0).toUpperCase() + contact.lastNameLowerCase.slice(1) : \n  '';\nconst fullName = `${firstName} ${lastName}`.trim() || 'none';\n\n// Create the dynamic variables object with all the enhanced context\nconst dynamicVariables = {\n  // Basic contact info\n  name: String(firstName || 'none'),\n  phone: String(contact.phone || 'none'),\n  email: String(contact.email || 'none'),\n  address: String(contact.address || 'none'),\n  full_name: String(fullName),\n  business_name: String(contact.businessName || contact.companyName || 'none'),\n  contact_id: String(contact.id || ''),\n  location_id: locationId,\n  private_integration_token: privateIntegrationToken,\n  account_company_name: businessName,\n  from_number: fromNumber,\n  to_number: toNumber,\n  account_timezone: accountTimezone,\n  voice_ai_agent_name: voiceAgentName,\n  voice_ai_agent_id: voiceAgentId,\n  voice_ai_agent_api_key: voiceAgentApiKey,\n  retell_api_key: retellApiKey,\n  \n  // Calendar IDs (conditionally added)\n  sales_calendar_id: detectedCalendarTypes.sales || salesCalendar1 || '',\n  sales2_calendar_id: detectedCalendarTypes.referral || salesCalendar2 || '',\n  onboarding_calendar_id: detectedCalendarTypes.onboarding || onboardingCalendar || '',\n  customer_success_calendar_id: detectedCalendarTypes.customer_success || customerSuccessCalendar || '',\n  \n  // Add conversation and notes history\n  conversation_history: formattedConversations,\n  notes_history: formattedNotes,\n  \n  // Tags (if available)\n  tags: Array.isArray(contact.tags) ? contact.tags.map(tag => String(tag)).join(', ') : ''\n};\n\n// Add all custom field IDs and values to the dynamicVariables\naccountCustomFields.forEach(field => {\n  const snakeCaseName = fieldMap[field.id]?.snakeCaseName;\n  if (snakeCaseName) {\n    // Add field ID with snake_case format (with _id suffix)\n    dynamicVariables[`${snakeCaseName}_id`] = String(field.id);\n    \n    // Only add field values that actually exist for this contact\n    if (contactFieldValues[snakeCaseName] !== undefined) {\n      dynamicVariables[snakeCaseName] = contactFieldValues[snakeCaseName];\n    }\n  }\n});\n\n// Calendar map for easy access to all calendars\ndynamicVariables.calendar_map = JSON.stringify(calendarMap);\n\n// Create the call structure for outbound calls\nconst callPayload = {\n  from_number: fromNumber,      // Your system's number for outbound\n  to_number: contact.phone || toNumber,  // Contact's phone if available, otherwise use toNumber\n  override_agent_id: agentId,   // Use override_agent_id as per API docs\n  retell_llm_dynamic_variables: dynamicVariables  // Put dynamic variables at root level\n};\n\n// Convert the object to a properly formatted JSON string\nconst jsonString = JSON.stringify(callPayload, null, 2);\n\n// Return an object with the jsonString as an easily mappable property\nreturn { jsonBody: jsonString };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1240,
+        620
+      ],
+      "id": "3cfdbd73-5075-4ba3-99b8-404d66de1070",
+      "name": "Match Final Values2",
+      "executeOnce": false,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Improved notes parser that's more dynamic and robust\nfunction processData() {\n  try {\n    // Get the raw outputs from the nodes\n    const conversationsRaw = $('Get Messages By Conversation ID GHL2').item.json.conversations_output;\n    const notesRaw = $('Get Notes GHL2').item.json.notes_output;\n    \n    // Parse the JSON strings\n    const conversationsData = JSON.parse(conversationsRaw);\n    const notesData = JSON.parse(notesRaw);\n    \n    // Format the data for humans and AI consumption\n    const readableConversations = formatConversations(conversationsData);\n    const readableNotes = formatNotesImproved(notesData);\n    \n    // Return the result\n    return [{ \n      json: {\n        readableConversations: readableConversations,\n        readableNotes: readableNotes\n      } \n    }];\n  } catch (error) {\n    return [{ json: { error: error.message } }];\n  }\n}\n\n// Format conversations (keeping existing implementation)\nfunction formatConversations(data) {\n  let result = \"== CONVERSATION HISTORY ==\\n\\n\";\n  \n  if (!data.messages || !data.messages.messages || data.messages.messages.length === 0) {\n    return result + \"No conversations found.\";\n  }\n  \n  const messages = data.messages.messages;\n  \n  for (let i = 0; i < messages.length; i++) {\n    const msg = messages[i];\n    \n    // Add date\n    result += \"[\" + new Date(msg.dateAdded).toLocaleString() + \"] \";\n    \n    // Add direction\n    if (msg.direction === \"inbound\") {\n      result += \"INCOMING \";\n    } else {\n      result += \"OUTGOING \";\n    }\n    \n    // Add type\n    if (msg.messageType === \"TYPE_ACTIVITY_OPPORTUNITY\") {\n      result += \"Opportunity Activity\";\n    } else if (msg.messageType === \"TYPE_SMS\") {\n      result += \"SMS\";\n    } else if (msg.messageType === \"TYPE_CALL\") {\n      result += \"Call\";\n    } else {\n      result += msg.messageType;\n    }\n    \n    // Add status if available\n    if (msg.status) {\n      result += \" (\" + msg.status + \")\";\n    }\n    \n    result += \":\\n\";\n    \n    // Add body if available\n    if (msg.body) {\n      result += msg.body + \"\\n\";\n    }\n    \n    // Add separator\n    if (i < messages.length - 1) {\n      result += \"\\n--------------------------------------------------\\n\\n\";\n    }\n  }\n  \n  return result;\n}\n\n// Improved notes formatter that's more flexible\nfunction formatNotesImproved(data) {\n  let result = \"== CONTACT NOTES ==\\n\\n\";\n  \n  if (!data.notes || data.notes.length === 0) {\n    return result + \"No notes found.\";\n  }\n  \n  const notes = data.notes;\n  \n  for (let i = 0; i < notes.length; i++) {\n    const note = notes[i];\n    \n    result += \"NOTE CREATED: \" + new Date(note.dateAdded).toLocaleString() + \"\\n\\n\";\n    \n    // Extract data dynamically from the note body\n    try {\n      // Get the note body and try to parse key-value pairs\n      const noteBody = note.body;\n      \n      // Check if the note body looks like it contains JSON-like key-value pairs\n      if (noteBody.includes(\"\\\"key\\\"\") && noteBody.includes(\"\\\"field_value\\\"\")) {\n        // Parse the pseudo-JSON structure\n        const entries = extractKeyValuePairs(noteBody);\n        \n        // Group entries by category\n        const callDetails = {};\n        let transcript = \"\";\n        let summary = \"\";\n        \n        // Process each entry\n        entries.forEach(entry => {\n          const key = entry.key;\n          const value = entry.value;\n          \n          // Handle special cases\n          if (key === \"AI Call Transcript\") {\n            transcript = value;\n          } else if (key === \"AI Call Summary\") {\n            summary = value;\n          } else {\n            // Store other fields in the details object\n            callDetails[key] = value;\n          }\n        });\n        \n        // Output formatted data (Details first)\n        result += \"=== CALL DETAILS ===\\n\";\n        \n        // Organize details into categories for better readability\n        const categories = {\n          \"Basic Info\": [\"AI Call Type\", \"AI Call Contact Name\", \"AI Call Duration\"],\n          \"Outcome\": [\"AI Call Outcome\", \"AI Call Outcome Reason\"],\n          \"Appointment\": [\"AI Call Appointment DateTime\"],\n          \"Contact Info\": [\"AI Call Contact Email\", \"AI Call Contact Phone\"],\n          \"Technical\": [\"AI Call Recording\", \"AI Call Timestamp\", \"AI Call Ended Reason\"]\n        };\n        \n        // Display details by category\n        for (const [category, fields] of Object.entries(categories)) {\n          let categoryHasValues = false;\n          let categoryContent = \"\";\n          \n          fields.forEach(field => {\n            if (callDetails[field] && callDetails[field] !== \"none\" && callDetails[field] !== \"not_detected\") {\n              categoryContent += `• ${field.replace('AI Call ', '')}: ${callDetails[field]}\\n`;\n              categoryHasValues = true;\n            }\n          });\n          \n          if (categoryHasValues) {\n            result += `\\n${category}:\\n${categoryContent}`;\n          }\n        }\n        \n        // Add any remaining fields that weren't in specific categories\n        let otherFields = \"\";\n        for (const [key, value] of Object.entries(callDetails)) {\n          if (value && value !== \"none\" && value !== \"not_detected\") {\n            // Check if this field was already included in a category\n            let alreadyIncluded = false;\n            for (const fields of Object.values(categories)) {\n              if (fields.includes(key)) {\n                alreadyIncluded = true;\n                break;\n              }\n            }\n            \n            if (!alreadyIncluded) {\n              otherFields += `• ${key.replace('AI Call ', '')}: ${value}\\n`;\n            }\n          }\n        }\n        \n        if (otherFields) {\n          result += \"\\nOther Details:\\n\" + otherFields;\n        }\n        \n        // Add summary if present\n        if (summary) {\n          result += \"\\n=== CALL SUMMARY ===\\n\" + summary + \"\\n\";\n        }\n        \n        // Add transcript if present (full transcript, but with improved formatting)\n        if (transcript) {\n          result += \"\\n=== FULL TRANSCRIPT ===\\n\\n\";\n          \n          // Improve transcript readability by formatting agent/user exchanges\n          const formattedTranscript = formatTranscript(transcript);\n          result += formattedTranscript + \"\\n\";\n        }\n      } else {\n        // If not in the expected format, just include the raw note body\n        result += \"NOTE CONTENT:\\n\" + noteBody + \"\\n\";\n      }\n    } catch (error) {\n      // Fallback if parsing fails\n      result += \"NOTE CONTENT (raw):\\n\" + note.body + \"\\n\";\n    }\n    \n    // Add separator between notes\n    if (i < notes.length - 1) {\n      result += \"\\n\" + \"=\".repeat(50) + \"\\n\\n\";\n    }\n  }\n  \n  return result;\n}\n\n// Helper function to format transcript for better readability\nfunction formatTranscript(transcript) {\n  // Replace escaped newlines with actual newlines\n  let formatted = transcript.replace(/\\\\n/g, '\\n');\n  \n  // Split into lines\n  const lines = formatted.split('\\n');\n  let result = '';\n  \n  // Process each line\n  for (let i = 0; i < lines.length; i++) {\n    const line = lines[i].trim();\n    \n    if (line.startsWith('Agent:')) {\n      // Format agent lines\n      result += line + '\\n';\n    } else if (line.startsWith('User:')) {\n      // Add spacing before user responses and format\n      if (i > 0) result += '\\n';\n      result += line + '\\n';\n    } else {\n      // Add other lines as-is\n      result += line + '\\n';\n    }\n  }\n  \n  return result;\n}\n\n\n// Helper function to extract key-value pairs from the pseudo-JSON structure\nfunction extractKeyValuePairs(text) {\n  const entries = [];\n  const lines = text.split(\"\\n\");\n  \n  let currentKey = null;\n  let currentValue = null;\n  \n  for (let i = 0; i < lines.length; i++) {\n    const line = lines[i].trim();\n    \n    // Look for key lines\n    if (line.includes(\"\\\"key\\\"\") && line.includes(\":\")) {\n      // Extract the key name\n      const keyMatch = line.match(/\\\"key\\\":\\s*\\\"([^\\\"]+)\\\"/);\n      if (keyMatch && keyMatch[1]) {\n        currentKey = keyMatch[1];\n      }\n    }\n    \n    // Look for field_value lines\n    if (line.includes(\"\\\"field_value\\\"\") && line.includes(\":\")) {\n      // Extract the value\n      const valueMatch = line.match(/\\\"field_value\\\":\\s*\\\"(.*?)\\\"/);\n      if (valueMatch) {\n        // Handle escaped quotes within the value\n        currentValue = valueMatch[1].replace(/\\\\\"/g, '\"').replace(/\\\\\\\\n/g, '\\n');\n        \n        // If we have both key and value, add them to our entries\n        if (currentKey) {\n          entries.push({\n            key: currentKey,\n            value: currentValue\n          });\n          \n          // Reset for next pair\n          currentKey = null;\n          currentValue = null;\n        }\n      }\n    }\n  }\n  \n  return entries;\n}\n\n// Run the function and return the result\nreturn processData();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        620
+      ],
+      "id": "ed706dd3-f673-4eb0-9c13-51ed0ee9effc",
+      "name": "Code Parse Notes2",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/contacts/{{ $('Search Contacts GHL6').item.json.contacts[0].id }}/notes",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields1').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "notes_output"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -20,
+        620
+      ],
+      "id": "69e5bb5c-64ef-42fd-b898-fb122898e9f9",
+      "name": "Get Notes GHL2",
+      "retryOnFail": false,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/conversations/{{ $('Search Conversations GHL2').item.json.conversations[0].id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields1').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "conversations_output"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -280,
+        620
+      ],
+      "id": "9abe0bf1-e89e-441d-9644-8eda3e5041a5",
+      "name": "Get Messages By Conversation ID GHL2",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://services.leadconnectorhq.com/conversations/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "contactId",
+              "value": "={{ $json.contacts[0].id }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields1').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -520,
+        620
+      ],
+      "id": "de74d182-a3ea-40aa-83ab-8187f1208f54",
+      "name": "Search Conversations GHL2",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://services.leadconnectorhq.com/calendars/",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "locationId",
+              "value": "={{ $('Set Account Fields1').item.json.locationId }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields1').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "calendars"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        620
+      ],
+      "id": "8c206766-6777-4c14-bbc5-15de030085ec",
+      "name": "Get Calendars GHL2",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/locations/{{ $('Set Account Fields1').item.json.locationId }}/customFields",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields1').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "custom_fields"
+            }
+          }
+        }
+      },
+      "id": "bba27ee4-02d7-4f05-8faf-2cbba7e44d38",
+      "name": "Get Custom Fields GHL2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        740,
+        620
+      ],
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://services.leadconnectorhq.com/locations/{{ $('Set Account Fields1').item.json.locationId }}/customValues",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields1').item.json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "custom_values"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        620
+      ],
+      "id": "fd95bf2c-264b-4bd4-945f-05ba32bae67f",
+      "name": "Get Custom Values GHL2",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set Account Fields1').first().json.Authorization }}"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"locationId\": \"{{ $('Set Account Fields1').first().json.locationId }}\",\n  \"page\": 1,\n  \"pageLimit\": 20,\n  \"filters\": [\n    {\n      \"field\": \"phone\",\n      \"operator\": \"eq\",\n      \"value\": \"{{ $('Set Account Fields1').first().json.to_number }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -820,
+        620
+      ],
+      "id": "ff5b0528-00a2-4519-9db7-9c3dc213a674",
+      "name": "Search Contacts GHL6",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Make sure I Look Right 👽 !!!",
+        "height": 80,
+        "width": 250
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        860
+      ],
+      "id": "898c1dbf-e0b7-4e99-9f1e-6e12d149d317",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1mc8xXyKeqiz0Tu6PiO18wdyk1HSbpY6mr8zk4y6DXRo",
+          "mode": "list",
+          "cachedResultName": "Reflex AC AI End Of Call Report ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mc8xXyKeqiz0Tu6PiO18wdyk1HSbpY6mr8zk4y6DXRo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "AI CALL",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mc8xXyKeqiz0Tu6PiO18wdyk1HSbpY6mr8zk4y6DXRo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha y Hora": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.fechahorario_de_cita }}",
+            "Numero de Telefono": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.phone }}",
+            "Nombre de Contacto": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.name }}",
+            "Nombre de Asistente": "={{ $('Webhook').item.json.body.call.agent_name }}",
+            "Tipo de Llamada": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.tipo_de_llamada_ai }}",
+            "resultado_llamada_ai": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.tipo_de_llamada_ai_id }}",
+            "Typo de Llamada": "={{ $('Webhook').item.json.body.call.call_type }}",
+            "Call Coste": "={{ $('Webhook').item.json.body.call.retell_llm_dynamic_variables.ai_coste }}",
+            "Call Duration (seconds)": "={{ $('Webhook').item.json.body.call.call_cost.total_duration_seconds }}",
+            "Duracion": "={{ $('Webhook').item.json.body.call.duration_ms }}",
+            "lead_calificado": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.lead_calificado }}",
+            "tiene_capital_disponible": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.tiene_capital_disponible }}",
+            "es_tomador_decisiones": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.es_tomador_decisiones }}",
+            "reporte_del_lead": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.reporte_del_lead }}",
+            "confirmo_asistencia": "={{ $('Webhook').item.json.body.call.call_analysis.custom_analysis_data.confirmo_asistencia }}",
+            "Transcripcion de Llamada ": "={{ $('Webhook').item.json.body.call.transcript }}"
+          },
+          "matchingColumns": [
+            "Nombre de Contacto"
+          ],
+          "schema": [
+            {
+              "id": "Nombre de Asistente",
+              "displayName": "Nombre de Asistente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre de Contacto",
+              "displayName": "Nombre de Contacto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Numero de Telefono",
+              "displayName": "Numero de Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha y Hora",
+              "displayName": "Fecha y Hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Typo de Llamada",
+              "displayName": "Typo de Llamada",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Duracion",
+              "displayName": "Duracion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tipo de Llamada",
+              "displayName": "Tipo de Llamada",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Call Duration (seconds)",
+              "displayName": "Call Duration (seconds)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "lead_calificado",
+              "displayName": "lead_calificado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tiene_capital_disponible",
+              "displayName": "tiene_capital_disponible",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "es_tomador_decisiones",
+              "displayName": "es_tomador_decisiones",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "reporte_del_lead",
+              "displayName": "reporte_del_lead",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "confirmo_asistencia",
+              "displayName": "confirmo_asistencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "resultado_llamada_ai",
+              "displayName": "resultado_llamada_ai",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Transcripcion de Llamada ",
+              "displayName": "Transcripcion de Llamada ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Call Coste",
+              "displayName": "Call Coste",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        140,
+        980
+      ],
+      "id": "307ae123-9f3e-4b04-aa04-5eb993f22fc8",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cBlxCdXolhBZVFfA",
+          "name": "Google Sheets account (joaco)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Make sure I Look Right 👽 !!!",
+        "height": 80,
+        "width": 250
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1440,
+        500
+      ],
+      "id": "4ee4b3bf-6e97-44f4-be65-3cdba6bfa26e",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Account Fields": {
+      "main": [
+        [
+          {
+            "node": "Search Contacts GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Set Account Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Account Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set get_free_slots Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set create_appointment Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set get_free_slots Fields": {
+      "main": [
+        [
+          {
+            "node": "Get Free Slots GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set create_appointment Fields": {
+      "main": [
+        [
+          {
+            "node": "Search Contacts GHL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Contacts GHL": {
+      "main": [
+        [
+          {
+            "node": "Search Contacts GHL2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Match Final Values": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Parse Notes": {
+      "main": [
+        [
+          {
+            "node": "Get Calendars GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Notes GHL": {
+      "main": [
+        [
+          {
+            "node": "Code Parse Notes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Messages By Conversation ID GHL": {
+      "main": [
+        [
+          {
+            "node": "Get Notes GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Conversations GHL": {
+      "main": [
+        [
+          {
+            "node": "Get Messages By Conversation ID GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Calendars GHL": {
+      "main": [
+        [
+          {
+            "node": "Get Custom Fields GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Custom Fields GHL": {
+      "main": [
+        [
+          {
+            "node": "Get Custom Values GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Custom Values GHL": {
+      "main": [
+        [
+          {
+            "node": "Match Final Values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Contacts GHL2": {
+      "main": [
+        [
+          {
+            "node": "If5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
+            "node": "Create Contact GHL2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Search Conversations GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Contact GHL2": {
+      "main": [
+        [
+          {
+            "node": "Create Opportunity GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Opportunity GHL": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Match Final Values1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Parse Notes1": {
+      "main": [
+        [
+          {
+            "node": "Get Calendars GHL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Notes GHL1": {
+      "main": [
+        [
+          {
+            "node": "Code Parse Notes1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Messages By Conversation ID GHL1": {
+      "main": [
+        [
+          {
+            "node": "Get Notes GHL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Conversations GHL1": {
+      "main": [
+        [
+          {
+            "node": "Get Messages By Conversation ID GHL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Calendars GHL1": {
+      "main": [
+        [
+          {
+            "node": "Get Custom Fields GHL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Custom Fields GHL1": {
+      "main": [
+        [
+          {
+            "node": "Get Custom Values GHL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Custom Values GHL1": {
+      "main": [
+        [
+          {
+            "node": "Match Final Values1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Search Conversations GHL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Free Slots GHL": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Contacts GHL1": {
+      "main": [
+        [
+          {
+            "node": "Create Appointment GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Appointment GHL": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Fields": {
+      "main": [
+        [
+          {
+            "node": "Get Retell Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Retell Agent": {
+      "main": [
+        [
+          {
+            "node": "Search Contacts GHL3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Contact GHL": {
+      "main": [
+        [
+          {
+            "node": "Create Note GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Note GHL": {
+      "main": [
+        [
+          {
+            "node": "Add Tag GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Tag GHL": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Contacts GHL3": {
+      "main": [
+        [
+          {
+            "node": "Update Contact GHL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Contacts GHL5": {
+      "main": [
+        [
+          {
+            "node": "Search Contacts GHL6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Account Fields1": {
+      "main": [
+        [
+          {
+            "node": "Search Contacts GHL5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Match Final Values2": {
+      "main": [
+        [
+          {
+            "node": "Create Phone Call Retell",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Parse Notes2": {
+      "main": [
+        [
+          {
+            "node": "Get Calendars GHL2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Notes GHL2": {
+      "main": [
+        [
+          {
+            "node": "Code Parse Notes2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Messages By Conversation ID GHL2": {
+      "main": [
+        [
+          {
+            "node": "Get Notes GHL2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Conversations GHL2": {
+      "main": [
+        [
+          {
+            "node": "Get Messages By Conversation ID GHL2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Calendars GHL2": {
+      "main": [
+        [
+          {
+            "node": "Get Custom Fields GHL2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Custom Fields GHL2": {
+      "main": [
+        [
+          {
+            "node": "Get Custom Values GHL2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Custom Values GHL2": {
+      "main": [
+        [
+          {
+            "node": "Match Final Values2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Contacts GHL6": {
+      "main": [
+        [
+          {
+            "node": "Search Conversations GHL2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b7d7a8cd-efab-4721-9add-75337857a52c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ec4ed2c7b2fc5474f2cb5d8ed4cc1846f8d64eaea37cb0ebe92846a913451653"
+  },
+  "id": "muOerMPC5oMIEHEC",
+  "tags": []
+}
